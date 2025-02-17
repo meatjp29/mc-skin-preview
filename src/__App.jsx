@@ -1,20 +1,7 @@
-import "./App.css";
 import { useEffect, useRef, useState } from "react";
-import ReactSkinview3d from "react-skinview3d";
-import { WalkingAnimation } from "skinview3d";
-import ImagePreview from "./ImagePreview.jsx";
 
 function App() {
-	const defaultOption = {
-		background: "#ff0000",
-	};
-
-	const viewerRef = useRef(null);
-	const [skinUrl, setSkinUrl] = useState("/steve.png");
-
-	const [errorMessage, setErrorMessage] = useState("");
-	const [background, setBackground] = useState("#f000ff");
-
+	const [imageUrl, setImageUrl] = useState(null); // 画像のURL
 	const [fileHandle, setFileHandle] = useState(null); // 選択したファイルハンドル
 	const lastModifiedRef = useRef(0); // 最終更新日時
 	const [watching, setWatching] = useState(false); // 監視フラグ
@@ -53,7 +40,7 @@ function App() {
 
 			// 画像URLを更新
 			const url = URL.createObjectURL(file);
-			setSkinUrl(url);
+			setImageUrl(url);
 			console.log("PNG画像を読み込みました:", file.name);
 		} catch (err) {
 			console.error("画像の読み込みに失敗:", err);
@@ -83,51 +70,20 @@ function App() {
 		};
 	}, [fileHandle, watching]);
 
-	useEffect(() => {
-		if (viewerRef.current) {
-			viewerRef.current.background = background;
-		}
-	}, [background]);
-
-	function changeBackgroundColor(color) {
-		setBackground(color);
-	}
-
 	return (
-		<>
-			<ReactSkinview3d
-				skinUrl={skinUrl}
-				height="500"
-				width="500"
-				onReady={({ viewer }) => {
-					viewer.animation = new WalkingAnimation();
-					viewer.autoRotate = true;
-					viewer.background = background;
-					viewerRef.current = viewer;
-				}}
-			/>
-
-			<div>
-				<button onClick={() => changeBackgroundColor("#ff0000")}>赤</button>
-				<button onClick={() => changeBackgroundColor("#00ff00")}>緑</button>
-				<button onClick={() => changeBackgroundColor("#0000ff")}>青</button>
-			</div>
-
-			{/* PNGファイル選択 */}
+		<div style={{ textAlign: "center", padding: "20px" }}>
+			<h2>PNG画像のリアルタイム監視</h2>
 			<button onClick={selectImageFile}>画像を選択</button>
 
-			{skinUrl
+			{imageUrl
 				? (
 					<div>
 						<p>選択された画像:</p>
-						<ImagePreview src={skinUrl} />
+						<img src={imageUrl} alt="Selected PNG" width="300" />
 					</div>
 				)
 				: <p>画像が選択されていません。</p>}
-
-			{/* エラーメッセージ */}
-			{errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-		</>
+		</div>
 	);
 }
 
