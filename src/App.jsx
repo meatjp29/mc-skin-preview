@@ -108,9 +108,18 @@ function App() {
 			/>
 
 			<div>
-				<button onClick={() => changeBackgroundColor("#ff0000")}>赤</button>
+				<button onClick={() => changeBackgroundColor("#000000")}>黒</button>
 				<button onClick={() => changeBackgroundColor("#00ff00")}>緑</button>
 				<button onClick={() => changeBackgroundColor("#0000ff")}>青</button>
+			</div>
+
+			<div>
+				<label>背景色変更:</label>
+				<select onChange={(e) => setBackground(e.target.value)} value={background}>
+					<option value="#000000">黒</option>
+					<option value="#00ff00">緑</option>
+					<option value="#0000ff">青</option>
+				</select>
 			</div>
 
 			{/* PNGファイル選択 */}
